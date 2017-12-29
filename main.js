@@ -10,7 +10,7 @@ var formalizer = require('./lib/formalizer.js');
 //this geneate the directory listing if the target url is for directory
 app.get('/*//', function(req, res){
       //console.log(home);
-      var home = process.argv[2] || "F:" ;
+      var home = process.argv[2] || "/" ;
       var data = formalizer.addHeader(req.hostname);
       var pos=0;
       var files=[],folders=[];
@@ -20,7 +20,7 @@ app.get('/*//', function(req, res){
         var func = function(j){
           if(items[i].indexOf("WindowsApps")==-1 && items[i].indexOf("RECYCLE")==-1 && items[i].indexOf("System")==-1 && items[i].indexOf("Config") == -1)
           fs.stat(home+ urlPath.replace(/%20/g,' ') + items[i].replace(/%20/g,' '), function (err, stats) {
-            
+
             if (err) {
               console.log(err);
               process.exit(1);
@@ -30,7 +30,7 @@ app.get('/*//', function(req, res){
               if(stats.isDirectory()){
                 //console.log(items[j] + " is  directory");
                 folders.push(items[j].replace(/%20/g,' '));
-                
+
               }
               else if(stats.isFile()){
                 //console.log(items[j] + " is  file ");
@@ -39,8 +39,8 @@ app.get('/*//', function(req, res){
               else {
                 console.log(items[j] + " is not a file or directory");
               }
-              
-              
+
+
             }
           });
       		if(j>=items.length-1 || items.length == 0 ){
@@ -71,7 +71,7 @@ app.get('/*//', function(req, res){
         for (var i=0; i<items.length; i++) {
           func(i);
         }
-        
+
       });
 });
 
@@ -100,12 +100,12 @@ app.get('/*\.*/', function(req, res, next){
     //console.log("file requested...");
   }
 
-  
+
 });
 
 
 app.use(function(err, req, res, next){
- 
+
   if (404 == err.status) {
     res.statusCode = 404;
     res.send('Cant find that file, sorry!');
@@ -117,4 +117,4 @@ app.use(function(err, req, res, next){
 if (!module.parent) {
   app.listen(8000);
   console.log('Express started on port %d', 8000);
-}	
+}
