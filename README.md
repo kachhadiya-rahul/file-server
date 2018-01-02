@@ -8,3 +8,5 @@ How to set things up :
 3. Hit npm install
 4. Next hit node main.js [root-folder-to-be-shared || F:] and note the ip it returns at runtime which is ip to share.
 
+For more information about how to run and for contribution goto [this blog](https://rahul1414.blogspot.in/2017/12/file-server-discription-in-many.html) .
+
