@@ -8,14 +8,31 @@ var formalizer = require('./lib/formalizer.js')
 var os = require('os')
 var bodyparser = require('body-parser')
 var async = require('async')
+var vidstream = require('./lib/vidstream.js')
 
 app.use('/static',express.static('images'))
 app.use(bodyparser.urlencoded({extended:false})) //for some reason now express does not ship bodyparser inbuilt
 
 
-app.get('/*',function(req,res){
+app.get('/',function(req,res){
   fs.ReadStream("./test/home.html").pipe(res)
+  console.log("get requested")
 })
+
+app.get('*/playvidvideo/*',function(req,res){
+  var platform = os.platform();
+  if(platform=="linux"){
+      var home = process.argv[2] || "/home/" ;
+  }else if (platform=="win32") {
+    var home = process.argv[2] || "C:/" ;
+  }
+  var urlParts = url.parse(req.url,true);
+  var urlPath = urlParts.pathname;
+  var file = req.params.file
+    , path1 = home+urlPath.replace(/%20/g,' ').replace("/playvidvideo","");
+  vidstream.streamvid(req,res,path1)
+})
+
 
 app.post('/*',function(req,res){
   //platform check
@@ -29,13 +46,12 @@ app.post('/*',function(req,res){
   //file or folder is requested
   var fof = req.body.fof
   if(fof == "file"){
-
     var urlParts = url.parse(req.url,true);
     var urlPath = urlParts.pathname;
     var file = req.params.file
       , path = home+urlPath.replace(/%20/g,' ');
+    console.log("file for download : "+path)
     res.download(path);
-
   }else if(fof == "folder"){
     var data = formalizer.addHeader(req.hostname)
     var pos=0
