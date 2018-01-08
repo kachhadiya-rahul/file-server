@@ -16,7 +16,6 @@ app.use(bodyparser.urlencoded({extended:false})) //for some reason now express d
 
 app.get('/',function(req,res){
   fs.ReadStream("./test/home.html").pipe(res)
-  console.log("get requested")
 })
 
 app.get('*/playvidvideo/*',function(req,res){
@@ -50,7 +49,6 @@ app.post('/*',function(req,res){
     var urlPath = urlParts.pathname;
     var file = req.params.file
       , path = home+urlPath.replace(/%20/g,' ');
-    console.log("file for download : "+path)
     res.download(path);
   }else if(fof == "folder"){
     var data = formalizer.addHeader(req.hostname)
